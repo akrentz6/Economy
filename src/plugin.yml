@@ -16,6 +16,8 @@ commands:
 permissions:
   economy.command.balance:
     default: true
+  economy.command.balancetop:
+    default: true
   economy.command.help:
     default: true
   economy.command.pay:

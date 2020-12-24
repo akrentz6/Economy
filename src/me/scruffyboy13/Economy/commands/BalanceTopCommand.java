@@ -19,7 +19,7 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		if (sender.hasPermission("economy.command.top")) {
+		if (sender.hasPermission("economy.command.balancetop")) {
 			
 			if (args.length == 0) {
 				
