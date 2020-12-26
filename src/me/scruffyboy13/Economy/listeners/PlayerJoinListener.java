@@ -14,8 +14,8 @@ public class PlayerJoinListener implements Listener {
 		
 		Player player = event.getPlayer();
 		
-		if (!Economy.getEconomyCore().hasAccount(player)) {
-			Economy.getEconomyCore().createPlayerAccount(player.getName());
+		if (!Economy.getEconomyUtils().hasAccount(player)) {
+			Economy.getEconomyUtils().createPlayerAccount(player.getName());
 		}
 		
 	}

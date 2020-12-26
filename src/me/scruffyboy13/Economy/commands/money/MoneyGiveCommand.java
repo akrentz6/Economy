@@ -37,7 +37,7 @@ public class MoneyGiveCommand extends CommandExecutor {
 			return;
 		}
 		
-		if (!Economy.getEconomyCore().hasAccount(other)) {
+		if (!Economy.getEconomyUtils().hasAccount(other)) {
 			StringUtils.sendConfigMessage(sender, "messages.money.give.otherNoAccount", ImmutableMap.of(
 					"%player%", other.getName()));
 			return;
@@ -53,14 +53,14 @@ public class MoneyGiveCommand extends CommandExecutor {
 			return;
 		}
 		
-		Economy.getEconomyCore().depositPlayer(other, amount);
+		Economy.getEconomyUtils().depositPlayer(other, amount);
 		StringUtils.sendConfigMessage(sender, "messages.money.give.sent", ImmutableMap.of(
-				"%amount%", Economy.getEconomyCore().format(amount) + "",
+				"%amount%", Economy.getEconomyUtils().format(amount) + "",
 				"%player%", other.getName()));
 		if (other instanceof Player) {
 			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
 				StringUtils.sendConfigMessage((Player) other, "messages.money.give.received", ImmutableMap.of(
-						"%amount%", Economy.getEconomyCore().format(amount)));
+						"%amount%", Economy.getEconomyUtils().format(amount)));
 			}
 		}
 		

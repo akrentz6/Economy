@@ -28,7 +28,7 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 			
 			Player player = (Player) sender;
 			
-			if (!Economy.getEconomyCore().hasAccount(player)) {
+			if (!Economy.getEconomyUtils().hasAccount(player)) {
 				StringUtils.sendConfigMessage(player, "messages.pay.noAccount");
 				return true;
 			}
@@ -41,7 +41,7 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 				return true;
 			}
 			
-			if (!Economy.getEconomyCore().hasAccount(other)) {
+			if (!Economy.getEconomyUtils().hasAccount(other)) {
 				StringUtils.sendConfigMessage(player, "messages.pay.otherNoAccount", ImmutableMap.of(
 						"%player%", other.getName()));
 				return true;
@@ -62,21 +62,21 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 				return true;
 			}
 			
-			if (!Economy.getEconomyCore().has(player, amount)) {
+			if (!Economy.getEconomyUtils().has(player, amount)) {
 				StringUtils.sendConfigMessage(player, "messages.pay.insufficientFunds");
 				return true;
 			}
 			
-			Economy.getEconomyCore().withdrawPlayer(player, amount);
+			Economy.getEconomyUtils().withdrawPlayer(player, amount);
 			StringUtils.sendConfigMessage(player, "messages.pay.payed", ImmutableMap.of(
 					"%player%", other.getName(), 
-					"%amount%", Economy.getEconomyCore().format(amount)));
+					"%amount%", Economy.getEconomyUtils().format(amount)));
 			
-			Economy.getEconomyCore().depositPlayer(other, amount);
+			Economy.getEconomyUtils().depositPlayer(other, amount);
 			if (other instanceof Player) {
 				StringUtils.sendConfigMessage((Player) other, "messages.pay.received", ImmutableMap.of(
 						"%player%", player.getName(), 
-						"%amount%", Economy.getEconomyCore().format(amount)));
+						"%amount%", Economy.getEconomyUtils().format(amount)));
 			}
 			
 			return true;

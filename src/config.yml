@@ -26,8 +26,8 @@ messages:
       
   balance:
     usage:
-      - "%prefix% &cUsage: /money balance"
-      - "%prefix% &cUsage: /money balance {player}"
+      - "%prefix% &cUsage: /balance"
+      - "%prefix% &cUsage: /balance {player}"
     noAccount:
       - "%prefix% &cYou don't have an account!"
     balance:
@@ -100,7 +100,7 @@ messages:
   
   pay:
     usage:
-      - "%prefix% &cUsage: /money pay {player} {amount}"
+      - "%prefix% &cUsage: /pay {player} {amount}"
     otherDoesntExist:
       - "%prefix% &5%player% &cdoesn't exist!"
     noAccount:
@@ -120,16 +120,15 @@ messages:
     
   top:
     usage:
-      - "%prefix% &cUsage: /money top"
+      - "%prefix% &cUsage: /balancetop"
+      - "%prefix% &cUsage: /balancetop {number}"
     noAccounts:
       - "%prefix% &cThere are no accounts!"
-    first:
-      - "%prefix% &61. &l%player%: &6%balance%"
-    second:
-      - "%prefix% &72. &l%player%: &7%balance%"
-    third:
-      - "%prefix% &c3. &l%player%: &c%balance%"
-    others:
-      - "%prefix% &b%rank%. &a&l%player%: &b%balance%"
+    invalidTop:
+      - "%prefix% &5%top% &cis invalid!"
+    notEnoughPlayers:
+      - "%prefix% &cThere are not enough players!"
+    message:
+      - "%prefix% &b%rank%. &a%player%: &b%balance%"
     self:
-      - "%prefix% &b%rank%. &l%player%: &b%balance% (YOU)"
+      - "%prefix% &b%rank%. &a%player%: &b%balance% (YOU)"

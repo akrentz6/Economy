@@ -21,40 +21,61 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 
 		if (sender.hasPermission("economy.command.balancetop")) {
 			
-			if (args.length == 0) {
+			if (args.length < 2) {
 				
 				if (Economy.getSortedPlayerManagerMap().isEmpty()) {
 					StringUtils.sendConfigMessage(sender, "messages.top.noAccounts");
 					return true;
 				}
 				
-				for (int i = 0; i < 10; i++) {
+				int top = 0;
+				if (args.length == 1) {
+					try {
+						top = Integer.valueOf(args[0]) - 1;
+					} catch(NumberFormatException e) {
+						StringUtils.sendConfigMessage(sender, "messages.top.invalidTop", ImmutableMap.of(
+								"%top%", args[0]));
+						return true;
+					}
+				}
+				
+				if (top < 0) {
+					StringUtils.sendConfigMessage(sender, "messages.top.invalidTop", ImmutableMap.of(
+							"%top%", args[0]));
+					return true;
+				}
+				
+				Object[] playerManagers = Economy.getSortedPlayerManagerMap().keySet().toArray();
+				
+				for (int i = top*10; i < (top+1)*10; i++) {
 					if (Economy.getSortedPlayerManagerMap().size() > i) {
-						UUID key = (UUID) Economy.getSortedPlayerManagerMap().keySet().toArray()[i];
+						UUID key = (UUID) playerManagers[i];
 						PlayerManager playerManager = Economy.getSortedPlayerManagerMap().get(key);
-						String section = "other";
-						if (i == 0) section = "first";
-						else if (i == 1) section = "second";
-						else if (i == 2) section = "third";
-						StringUtils.sendConfigMessage(sender, "messages.top." + section, ImmutableMap.of(
+						StringUtils.sendConfigMessage(sender, "messages.top.message", ImmutableMap.of(
+								"%rank%", i+1 + "",
 								"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
-								"%balance%", Economy.getEconomyCore().format(playerManager.getBalance()) +  ""
+								"%balance%", Economy.getEconomyUtils().format(playerManager.getBalance()) +  ""
 								));
 					}
 					else {
-						return true;
+						if (i == top*10) {
+							StringUtils.sendConfigMessage(sender, "messages.top.notEnoughPlayers");
+							return true;
+						}
 					}
 				}
 				
 				if (sender instanceof Player) {
 					Player player = (Player) sender;
-					if (Economy.getEconomyCore().hasAccount(player)) {
+					if (Economy.getEconomyUtils().hasAccount(player)) {
 						PlayerManager playerManager = Economy.getPlayerManagerMap().get(player.getUniqueId());
-						if (!(new ArrayList<PlayerManager>(
-								Economy.getSortedPlayerManagerMap().values()).indexOf(playerManager) < 10)) {
+						int playerIndex = new ArrayList<PlayerManager>(
+								Economy.getSortedPlayerManagerMap().values()).indexOf(playerManager);
+						if (playerIndex < top*10 || playerIndex > (top+1)*10) {
 							StringUtils.sendConfigMessage(sender, "messages.top.self", ImmutableMap.of(
+									"%rank%", playerIndex + "",
 									"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
-									"%balance%", Economy.getEconomyCore().format(playerManager.getBalance()) +  ""
+									"%balance%", Economy.getEconomyUtils().format(playerManager.getBalance()) +  ""
 									));
 						}
 					}

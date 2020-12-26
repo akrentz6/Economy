@@ -19,24 +19,24 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.scruffyboy13.Economy.commands.BalanceCommand;
-import me.scruffyboy13.Economy.commands.PayCommand;
 import me.scruffyboy13.Economy.commands.BalanceTopCommand;
+import me.scruffyboy13.Economy.commands.PayCommand;
 import me.scruffyboy13.Economy.commands.money.MoneyCommandHandler;
 import me.scruffyboy13.Economy.iterators.PlayerManagerIterator;
 import me.scruffyboy13.Economy.listeners.PlayerJoinListener;
+import me.scruffyboy13.Economy.utils.EconomyUtils;
 import me.scruffyboy13.Economy.utils.FileUtils;
 import me.scruffyboy13.Economy.utils.SQLUtils;
 
 public class Economy extends JavaPlugin {
 
 	private static Economy instance;
-	private static EconomyCore economyCore;
+	private static EconomyUtils economyUtils;
 	private static MySQL sql;
 	private static MoneyCommandHandler moneyCommandHandler;
 	private static Map<UUID, PlayerManager> playerManagerMap = new HashMap<>();
@@ -53,7 +53,7 @@ public class Economy extends JavaPlugin {
 		sqlColumns.put("Balance", "DECIMAL(65, 1) NOT NULL DEFAULT " + getConfig().getDouble("startingBalance"));
 		
 		instance = this;
-		economyCore = new EconomyCore();
+		economyUtils = new EconomyUtils();
 
 		if (!setupEconomy()) {
 			this.getLogger().warning("Economy couldn't be registed, Vault plugin is missing!");
@@ -70,9 +70,7 @@ public class Economy extends JavaPlugin {
 		this.getCommand("pay").setExecutor(new PayCommand());
 		this.getCommand("balancetop").setExecutor(new BalanceTopCommand());
 		
-		registerListeners(
-				new PlayerJoinListener()
-				);
+		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
 		if (getConfig().getBoolean("mysql.use-mysql")) {
 			
@@ -222,7 +220,7 @@ public class Economy extends JavaPlugin {
 	public void connectToSQL() {
 		try {
 			sql.connect();
-            this.getLogger().info("Successfully connected to your mysql database.");
+            this.getLogger().info("Successfully connected to mysql database.");
         } 
         catch (SQLException e) {
 			this.getLogger().warning("There was an error connecting to the database. " + e.getMessage());
@@ -245,7 +243,7 @@ public class Economy extends JavaPlugin {
 			return false;
 		}
 		this.getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, 
-				economyCore, this, ServicePriority.Highest);
+				economyUtils, this, ServicePriority.Highest);
 		return true;
 	}
 
@@ -261,18 +259,12 @@ public class Economy extends JavaPlugin {
 		return moneyCommandHandler;
 	}
 	
-	public static EconomyCore getEconomyCore() {
-		return economyCore;
+	public static EconomyUtils getEconomyUtils() {
+		return economyUtils;
 	}
 
 	public static Map<UUID, PlayerManager> getPlayerManagerMap() {
 		return playerManagerMap;
-	}
-	
-	private void registerListeners(Listener... listeners) {
-		for (Listener listener : listeners) {
-			Bukkit.getPluginManager().registerEvents(listener, this);
-		}
 	}
 
 	public static BukkitRunnable getBalanceTopRunnable() {

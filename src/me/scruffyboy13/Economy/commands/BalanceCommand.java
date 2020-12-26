@@ -28,32 +28,32 @@ public class BalanceCommand implements org.bukkit.command.CommandExecutor {
 				
 				Player player = (Player) sender;
 				
-				if (!Economy.getEconomyCore().hasAccount(player)) {
+				if (!Economy.getEconomyUtils().hasAccount(player)) {
 					StringUtils.sendConfigMessage(player, "messages.balance.noAccount");
 					return true;
 				}
 				
-				Double balance = Economy.getEconomyCore().getBalance(player);
+				Double balance = Economy.getEconomyUtils().getBalance(player);
 				StringUtils.sendConfigMessage(player, "messages.balance.balance", ImmutableMap.of(
-						"%balance%", Economy.getEconomyCore().format(balance) + ""));
+						"%balance%", Economy.getEconomyUtils().format(balance) + ""));
 				
 				return true;
 				
 			}
-			else if (args.length == 1){
+			else if (args.length == 1) {
 				
 				OfflinePlayer other = Bukkit.getOfflinePlayer(args[0]);
 				
-				if (!Economy.getEconomyCore().hasAccount(other)) {
+				if (!Economy.getEconomyUtils().hasAccount(other)) {
 					StringUtils.sendConfigMessage(sender, "messages.money.otherNoAccount", ImmutableMap.of(
 							"%player%", other.getName()));
 					return true;
 				}
 	
-				Double balance = Economy.getEconomyCore().getBalance(other);
+				Double balance = Economy.getEconomyUtils().getBalance(other);
 				StringUtils.sendConfigMessage(sender, "messages.money.balance.otherBalance", ImmutableMap.of(
 						"%player%", other.getName(),
-						"%balance%", Economy.getEconomyCore().format(balance) + ""));
+						"%balance%", Economy.getEconomyUtils().format(balance) + ""));
 				
 				return true;
 				

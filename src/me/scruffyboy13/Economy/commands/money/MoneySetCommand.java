@@ -38,7 +38,7 @@ public class MoneySetCommand extends CommandExecutor {
 			return;
 		}
 		
-		if (!Economy.getEconomyCore().hasAccount(other)) {
+		if (!Economy.getEconomyUtils().hasAccount(other)) {
 			StringUtils.sendConfigMessage(sender, "messages.money.set.otherNoAccount", ImmutableMap.of(
 					"%player%", other.getName()));
 			return;
@@ -57,12 +57,12 @@ public class MoneySetCommand extends CommandExecutor {
 		PlayerManager playerManager = Economy.getPlayerManagerMap().get(other.getUniqueId());
 		playerManager.setBalance(amount);
 		StringUtils.sendConfigMessage(sender, "messages.money.set.setter", ImmutableMap.of(
-				"%balance%", Economy.getEconomyCore().format(amount) + "",
+				"%balance%", Economy.getEconomyUtils().format(amount) + "",
 				"%player%", other.getName()));
 		if (other instanceof Player) {
 			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
 				StringUtils.sendConfigMessage((Player) other, "messages.money.set.set", ImmutableMap.of(
-						"%amount%", Economy.getEconomyCore().format(amount)));
+						"%amount%", Economy.getEconomyUtils().format(amount)));
 			}
 		}
 		
@@ -70,7 +70,6 @@ public class MoneySetCommand extends CommandExecutor {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
