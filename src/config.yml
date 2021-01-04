@@ -6,7 +6,7 @@ SaveDataTimerInterval: 10
 currencyNameSingular: "Dollar"
 currencyNamePlural: "Dollars"
 startingBalance: 100.0
-moneySymbol: "$"
+currencyLocale: "en_US"
 
 mysql:
   use-mysql: false

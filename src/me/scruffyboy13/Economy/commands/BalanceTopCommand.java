@@ -54,7 +54,7 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 						StringUtils.sendConfigMessage(sender, "messages.top.message", ImmutableMap.of(
 								"%rank%", i+1 + "",
 								"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
-								"%balance%", Economy.getEconomyUtils().format(playerManager.getBalance()) +  ""
+								"%balance%", Economy.getEconomyUtils().format(playerManager.getTopBalance()) +  ""
 								));
 					}
 					else {
@@ -75,7 +75,7 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 							StringUtils.sendConfigMessage(sender, "messages.top.self", ImmutableMap.of(
 									"%rank%", playerIndex + "",
 									"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
-									"%balance%", Economy.getEconomyUtils().format(playerManager.getBalance()) +  ""
+									"%balance%", Economy.getEconomyUtils().format(playerManager.getTopBalance()) +  ""
 									));
 						}
 					}

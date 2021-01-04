@@ -30,6 +30,7 @@ public class FileUtils {
 			PlayerManager playerManager = new PlayerManager();
 			playerManager.setUUID(UUID.fromString(config.getString("UUID")));
 			playerManager.setBalance(config.getDouble("Balance"));
+			playerManager.setTopBalance(playerManager.getBalance());
 			playerManager.setValid(true);
 			playerManagerMap.put(playerManager.getUUID(), playerManager);
 		}

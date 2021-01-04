@@ -170,7 +170,7 @@ public class Economy extends JavaPlugin {
 		}
 		
 		balanceTopRunnable = new BukkitRunnable() {
-			Comparator<Entry<UUID, PlayerManager>> valueComparator = new Comparator<Entry<UUID, PlayerManager>>() {
+			Comparator<Entry<UUID, PlayerManager>> balanceComparator = new Comparator<Entry<UUID, PlayerManager>>() {
 				@Override public int compare(Entry<UUID, PlayerManager> e1, Entry<UUID, PlayerManager> e2) { 
 					Double balance1 = e1.getValue().getBalance();
 					Double balance2 = e2.getValue().getBalance();
@@ -181,7 +181,10 @@ public class Economy extends JavaPlugin {
 			public void run() {
 				List<Entry<UUID, PlayerManager>> listOfPlayerManagers = 
 						new ArrayList<Entry<UUID, PlayerManager>>(playerManagerMap.entrySet());
-				Collections.sort(listOfPlayerManagers, valueComparator);
+				Collections.sort(listOfPlayerManagers, balanceComparator);
+				for (Map.Entry<UUID, PlayerManager> player : playerManagerMap.entrySet()) {
+					player.getValue().setTopBalance(player.getValue().getBalance());
+				}
 				sortedPlayerManagerMap = listOfPlayerManagers.stream().collect(Collectors.toMap(
 						Map.Entry::getKey, Map.Entry::getValue, (v1,v2)->v1, LinkedHashMap::new));
 			}

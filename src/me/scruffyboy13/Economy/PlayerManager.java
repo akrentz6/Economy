@@ -10,6 +10,7 @@ public class PlayerManager {
 
 	private UUID uuid;
 	private double balance;
+	private double topBalance;
 	
 	private boolean valid;
 	
@@ -71,6 +72,14 @@ public class PlayerManager {
 	
 	public void withdraw(double amount) {
 		balance -= amount;
+	}
+
+	public double getTopBalance() {
+		return topBalance;
+	}
+
+	public void setTopBalance(double topBalance) {
+		this.topBalance = topBalance;
 	}
 	
 }

@@ -1,9 +1,11 @@
 package me.scruffyboy13.Economy.utils;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -125,7 +127,8 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 
 	@Override
 	public String format(double amount) {
-		return Economy.getInstance().getConfig().getString("moneySymbol") + amount;
+		return NumberFormat.getCurrencyInstance(LocaleUtils.toLocale(
+				Economy.getInstance().getConfig().getString("currencyLocale"))).format(amount);
 	}
 
 	@Override

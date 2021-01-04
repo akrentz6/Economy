@@ -22,6 +22,7 @@ public class SQLUtils {
 			PlayerManager playerManager = new PlayerManager();
 			playerManager.setUUID(UUID.fromString(result.getString("UUID")));
 			playerManager.setBalance(result.getDouble("Balance"));
+			playerManager.setTopBalance(playerManager.getBalance());
 			playerManager.setValid(true);
 			playerManagerMap.put(playerManager.getUUID(), playerManager);
 		}
