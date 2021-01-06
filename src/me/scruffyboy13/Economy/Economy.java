@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,6 +62,13 @@ public class Economy extends JavaPlugin {
 			return;
 		}
 		this.getLogger().info("Vault found, Economy has been registered.");
+		
+		String locale = getConfig().getString("currencyLocale");
+		if (LocaleUtils.toLocale(locale) == null) {
+			this.getLogger().warning(locale + " is an invalid locale! Change it in your config.yml");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
 		
 		moneyCommandHandler = new MoneyCommandHandler();
 		this.getCommand("money").setExecutor(moneyCommandHandler);

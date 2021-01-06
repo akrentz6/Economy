@@ -22,6 +22,7 @@ public class PlayerManager {
 		
 		this.uuid = uuid;
 		this.balance = balance;
+		this.topBalance = balance;
 		
 		if (Economy.getInstance().getConfig().getBoolean("mysql.use-mysql")) {
 			try {
