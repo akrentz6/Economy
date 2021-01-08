@@ -54,11 +54,16 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 			
 			double amount = 0;
 			try {
-				amount = Math.round(Double.valueOf(args[1]) * 10) / 10.0;
+				amount = Economy.getAmountFromString(args[1]);
 			}
 			catch (NumberFormatException e){
 				StringUtils.sendConfigMessage(player, "messages.pay.invalidAmount", ImmutableMap.of(
 						"%amount%", args[1]));
+				return true;
+			}
+			if (amount <= 0) {
+				StringUtils.sendConfigMessage(sender, "messages.money.give.invalidAmount", ImmutableMap.of(
+						"%amount%", args[2]));
 				return true;
 			}
 			

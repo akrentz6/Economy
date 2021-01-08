@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,12 +46,26 @@ public class Economy extends JavaPlugin {
 	private static BukkitRunnable savePlayerDataRunnable;
 	private static BukkitRunnable balanceTopRunnable;
 	
+	private static Map<String, Integer> suffixes = new HashMap<>();
+	static {
+		suffixes.put("k", 3);
+		suffixes.put("K", 3);
+		suffixes.put("m", 6);
+		suffixes.put("M", 6);
+		suffixes.put("b", 9);
+		suffixes.put("B", 9);
+		suffixes.put("t", 12);
+		suffixes.put("T", 12);
+		suffixes.put("q", 15);
+		suffixes.put("Q", 15);
+	}
+	
 	@Override
 	public void onEnable() {
 		
 		saveDefaultConfig();
 		
-		sqlColumns.put("Balance", "DECIMAL(65, 1) NOT NULL DEFAULT " + getConfig().getDouble("startingBalance"));
+		sqlColumns.put("Balance", "DECIMAL(65, 2) NOT NULL DEFAULT " + getConfig().getDouble("startingBalance"));
 		
 		instance = this;
 		economyUtils = new EconomyUtils();
@@ -63,8 +77,8 @@ public class Economy extends JavaPlugin {
 		}
 		this.getLogger().info("Vault found, Economy has been registered.");
 		
-		String locale = getConfig().getString("currencyLocale");
-		if (LocaleUtils.toLocale(locale) == null) {
+		String locale = getConfig().getString("locale");
+		if (Locale.forLanguageTag(locale) == null) {
 			this.getLogger().warning(locale + " is an invalid locale! Change it in your config.yml");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -92,11 +106,20 @@ public class Economy extends JavaPlugin {
 			connectToSQL();
 			
 			if (sql.isConnected()) {
+				
 				try {
 					SQLUtils.createTable();
 					playerManagerMap = SQLUtils.getPlayerDataFromDatabase();
 				} catch (SQLException e) {
 					this.getLogger().warning("There was an error with getting player balances from your mysql database.");
+					Bukkit.getPluginManager().disablePlugin(this);
+					return;
+				}
+				
+				try {
+					SQLUtils.setTwoDecimalPlaces();
+				} catch (SQLException e) {
+					this.getLogger().warning("There was an error updating the sql balance from 1dp to 2dp.");
 					Bukkit.getPluginManager().disablePlugin(this);
 					return;
 				}
@@ -244,6 +267,18 @@ public class Economy extends JavaPlugin {
         	return;
         }
 	}
+	
+	public static double getAmountFromString(String string) {
+		int mult = 1;
+		for (Map.Entry<String, Integer> suffix : suffixes.entrySet()) {
+			if (string.endsWith(suffix.getKey())) {
+				string = string.substring(0, string.length() - 1);
+				mult = suffix.getValue();
+			}
+		}
+		double pow = Math.pow(10, mult);
+		return Math.round(Double.valueOf(string) * (100.0 * pow)) / (100.0 * pow) * pow;
+	}
 
 	public static Economy getInstance() {
 		return instance;
@@ -292,6 +327,10 @@ public class Economy extends JavaPlugin {
 
 	public static BukkitRunnable getSavePlayerDataRunnable() {
 		return savePlayerDataRunnable;
+	}
+
+	public static Map<String, Integer> getSuffixes() {
+		return suffixes;
 	}
 	
 }

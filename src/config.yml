@@ -5,8 +5,10 @@ SaveDataTimerInterval: 10
 
 currencyNameSingular: "Dollar"
 currencyNamePlural: "Dollars"
-startingBalance: 100.0
-currencyLocale: "en_US"
+startingBalance: 100.00
+# Changing the locale will change wht format the money is in, see 
+# https://www.techonthenet.com/js/language_tags.php for examples.
+locale: "en-US"
 
 mysql:
   use-mysql: false
@@ -61,7 +63,6 @@ messages:
         - "%prefix% &cUsage: /money help"
       message:
         - "%prefix% &eCommands:"
-        - "%prefix% &b/money"
         - "%prefix% &b/money help"
         - "%prefix% &b/balancetop"
         - "%prefix% &b/balance"

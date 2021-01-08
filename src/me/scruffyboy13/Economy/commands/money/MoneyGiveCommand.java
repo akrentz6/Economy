@@ -45,9 +45,14 @@ public class MoneyGiveCommand extends CommandExecutor {
 		
 		double amount = 0;
 		try {
-			amount = Math.round(Double.valueOf(args[2]) * 10) / 10.0;
+			amount = Economy.getAmountFromString(args[1]);
 		}
 		catch (NumberFormatException e){
+			StringUtils.sendConfigMessage(sender, "messages.money.give.invalidAmount", ImmutableMap.of(
+					"%amount%", args[2]));
+			return;
+		}
+		if (amount <= 0) {
 			StringUtils.sendConfigMessage(sender, "messages.money.give.invalidAmount", ImmutableMap.of(
 					"%amount%", args[2]));
 			return;
@@ -55,7 +60,7 @@ public class MoneyGiveCommand extends CommandExecutor {
 		
 		Economy.getEconomyUtils().depositPlayer(other, amount);
 		StringUtils.sendConfigMessage(sender, "messages.money.give.sent", ImmutableMap.of(
-				"%amount%", Economy.getEconomyUtils().format(amount) + "",
+				"%amount%", Economy.getEconomyUtils().format(amount),
 				"%player%", other.getName()));
 		if (other instanceof Player) {
 			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {

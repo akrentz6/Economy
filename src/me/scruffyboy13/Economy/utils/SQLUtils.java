@@ -49,7 +49,8 @@ public class SQLUtils {
 	}
 	
 	public static void deletePlayerFromDatabase(PlayerManager playerManager) throws SQLException {
-		PreparedStatement statement = Economy.getSQL().getConnection().prepareStatement("DELETE FROM Economy WHERE UUID=?");
+		PreparedStatement statement = Economy.getSQL().getConnection().prepareStatement("DELETE FROM Economy "
+				+ "WHERE UUID=?");
 		statement.setString(1, playerManager.getUUID().toString());
 		statement.executeUpdate();
 		statement.close();
@@ -64,6 +65,13 @@ public class SQLUtils {
 				statement.execute("ALTER TABLE Economy ADD " + column.getKey() + " " + column.getValue() + ";");
 			}
 		}
+		statement.close();
+	}
+
+	public static void setTwoDecimalPlaces() throws SQLException {
+		PreparedStatement statement = Economy.getSQL().getConnection().prepareStatement("ALTER TABLE Economy "
+				+ "MODIFY COLUMN Balance " + Economy.getSQLColumns().get("Balance"));
+		statement.executeUpdate();
 		statement.close();
 	}
 

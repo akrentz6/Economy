@@ -46,9 +46,14 @@ public class MoneySetCommand extends CommandExecutor {
 		
 		double amount = 0;
 		try {
-			amount = Math.round(Double.valueOf(args[2]) * 10) / 10.0;
+			amount = Economy.getAmountFromString(args[2]);
 		}
 		catch (NumberFormatException e){
+			StringUtils.sendConfigMessage(sender, "messages.money.set.invalidAmount", ImmutableMap.of(
+					"%amount%", args[2]));
+			return;
+		}
+		if (amount <= 0) {
 			StringUtils.sendConfigMessage(sender, "messages.money.set.invalidAmount", ImmutableMap.of(
 					"%amount%", args[2]));
 			return;
@@ -57,7 +62,7 @@ public class MoneySetCommand extends CommandExecutor {
 		PlayerManager playerManager = Economy.getPlayerManagerMap().get(other.getUniqueId());
 		playerManager.setBalance(amount);
 		StringUtils.sendConfigMessage(sender, "messages.money.set.setter", ImmutableMap.of(
-				"%balance%", Economy.getEconomyUtils().format(amount) + "",
+				"%balance%", Economy.getEconomyUtils().format(amount),
 				"%player%", other.getName()));
 		if (other instanceof Player) {
 			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
