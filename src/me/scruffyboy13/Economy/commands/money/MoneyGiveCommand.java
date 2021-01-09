@@ -45,7 +45,7 @@ public class MoneyGiveCommand extends CommandExecutor {
 		
 		double amount = 0;
 		try {
-			amount = Economy.getAmountFromString(args[1]);
+			amount = Economy.getAmountFromString(args[2]);
 		}
 		catch (NumberFormatException e){
 			StringUtils.sendConfigMessage(sender, "messages.money.give.invalidAmount", ImmutableMap.of(
