@@ -269,7 +269,7 @@ public class Economy extends JavaPlugin {
 	}
 	
 	public static double getAmountFromString(String string) {
-		int mult = 1;
+		int mult = 0;
 		for (Map.Entry<String, Integer> suffix : suffixes.entrySet()) {
 			if (string.endsWith(suffix.getKey())) {
 				string = string.substring(0, string.length() - 1);
