@@ -21,6 +21,7 @@ public class MoneyCommandHandler implements org.bukkit.command.CommandExecutor, 
 	public MoneyCommandHandler() {
 		commands.put("give", new MoneyGiveCommand());
 		commands.put("help", new MoneyHelpCommand());
+		commands.put("reload", new MoneyReloadCommand());
 		commands.put("set", new MoneySetCommand());
 		commands.put("take", new MoneyTakeCommand());
 	}

@@ -69,6 +69,12 @@ messages:
         - "%prefix% &b/balance {player}"
         - "%prefix% &b/pay {player} {amount}"
     
+    reload:
+      usage:
+        - "%prefix% &cUsage: /money reload"
+      reloaded:
+        - "%prefix% &aYou reloaded the economy."
+    
     set:
       usage:
         - "%prefix% &cUsage: /money set {player} {amount}"

@@ -1,6 +1,6 @@
 name: Economy
 main: me.scruffyboy13.Economy.Economy
-version: 1.4.2
+version: 1.5
 author: scruffyboy13
 depend: [Vault]
 
@@ -27,4 +27,6 @@ permissions:
   economy.command.take:
     default: op
   economy.command.set:
+    default: op
+  economy.command.reload:
     default: op

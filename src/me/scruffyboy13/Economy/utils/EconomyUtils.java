@@ -128,7 +128,8 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 	@Override
 	public String format(double amount) {
 		return NumberFormat.getCurrencyInstance(Locale.forLanguageTag(
-				Economy.getInstance().getConfig().getString("locale"))).format(amount);
+				Economy.getInstance().getConfig().getString("locale")))
+				.format(amount).replace("&nbsp", " ");
 	}
 
 	@Override
