@@ -73,7 +73,7 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 			}
 			
 			Economy.getEconomyUtils().withdrawPlayer(player, amount);
-			StringUtils.sendConfigMessage(player, "messages.pay.payed", ImmutableMap.of(
+			StringUtils.sendConfigMessage(player, "messages.pay.paid", ImmutableMap.of(
 					"%player%", other.getName(), 
 					"%amount%", Economy.getEconomyUtils().format(amount)));
 			
