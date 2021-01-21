@@ -1,5 +1,6 @@
 package me.scruffyboy13.Economy.utils;
 
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.scruffyboy13.Economy.Economy;
 import me.scruffyboy13.Economy.PlayerManager;
@@ -72,6 +74,7 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 		PlayerManager playerManager = new PlayerManager(uuid, startingBalance, startingBankBalance);
 		if (playerManager != null && playerManager.isValid()) {
 			Economy.getPlayerManagerMap().put(uuid, playerManager);
+			save(playerManager);
 			return true;
 		}
 		return false;
@@ -121,6 +124,7 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 		}
 		PlayerManager playerManager = Economy.getPlayerManagerMap().get(uuid);
 		playerManager.deposit(amount);
+		save(playerManager);
         return new EconomyResponse(amount, playerManager.getBalance(), ResponseType.SUCCESS, "");
 		
 	}
@@ -267,11 +271,34 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 		PlayerManager playerManager = Economy.getPlayerManagerMap().get(uuid);
 		if (playerManager.getBalance() > amount) {
 			playerManager.withdraw(amount);
+			save(playerManager);
 			return new EconomyResponse(amount, playerManager.getBalance(), ResponseType.SUCCESS, "");
 		}
 		else {
 			return new EconomyResponse(0, playerManager.getBalance(), ResponseType.FAILURE, "Insufficient funds!");
 		}
+	}
+	
+	private void save(PlayerManager playerManager) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (Economy.getInstance().getConfig().getBoolean("mysql.use-mysql")) {
+					try {
+						SQLUtils.savePlayerToDatabase(playerManager);
+					} catch (SQLException e) {
+						Economy.getInstance().getLogger().warning("There was an error with saving to the database, "
+								+ "this isn't a problem with the plugin.");
+						return;
+					}
+					return;
+				}
+				else {
+					FileUtils.saveToFile(FileUtils.getIslandFile(playerManager), playerManager);
+					return;
+				}
+			}
+		}.runTaskAsynchronously(Economy.getInstance());
 	}
 
 }

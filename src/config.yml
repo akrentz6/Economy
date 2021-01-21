@@ -1,7 +1,6 @@
 # All intervals are in ticks (20 ticks = 1 second)
 BalanceTopTimerInterval: 180
 AccountsSavedPerRun: 1
-SaveDataTimerInterval: 10
 
 currencyNameSingular: "Dollar"
 currencyNamePlural: "Dollars"
@@ -17,6 +16,20 @@ mysql:
   database: "database"
   username: "username"
   password: "password"
+
+suffixes:
+  # amount is multiplied by 10^number.
+  # e.g. for k, the amount is multiplied by 10^3 (1,000)
+  k: 3
+  K: 3
+  m: 6
+  M: 6
+  b: 9
+  B: 9
+  t: 12
+  T: 12
+  q: 15
+  Q: 15
 
 messages:
 

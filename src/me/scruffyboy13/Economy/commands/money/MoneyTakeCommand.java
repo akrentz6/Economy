@@ -23,6 +23,7 @@ public class MoneyTakeCommand extends CommandExecutor {
 		this.setUsage(Economy.getInstance().getConfig().getStringList("messages.money.take.usage"));
 		this.setBoth(true);
 		this.setLengths(Arrays.asList(3));
+		this.setAliases(Arrays.asList("remove"));
 	}
 
 	@SuppressWarnings("deprecation")

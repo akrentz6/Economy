@@ -18,12 +18,14 @@ public class MoneyReloadCommand extends CommandExecutor {
 		this.setUsage(Economy.getInstance().getConfig().getStringList("messages.money.reload.usage"));
 		this.setBoth(true);
 		this.setLengths(Arrays.asList(1));
+		this.setAliases(Arrays.asList("rl"));
 	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 
 		Economy.getInstance().reloadConfig();
+		Economy.setSuffixes(Economy.getSuffixesFromConfig());
 		
 		Economy.getBalanceTopRunnable().cancel();
 		int interval = Economy.getInstance().getConfig().getInt("BalanceTopTimerInterval");

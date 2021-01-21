@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +27,6 @@ import me.scruffyboy13.Economy.commands.BalanceCommand;
 import me.scruffyboy13.Economy.commands.BalanceTopCommand;
 import me.scruffyboy13.Economy.commands.PayCommand;
 import me.scruffyboy13.Economy.commands.money.MoneyCommandHandler;
-import me.scruffyboy13.Economy.iterators.PlayerManagerIterator;
 import me.scruffyboy13.Economy.listeners.PlayerJoinListener;
 import me.scruffyboy13.Economy.utils.EconomyUtils;
 import me.scruffyboy13.Economy.utils.FileUtils;
@@ -43,22 +41,8 @@ public class Economy extends JavaPlugin {
 	private static Map<UUID, PlayerManager> playerManagerMap = new HashMap<>();
 	private static Map<UUID, PlayerManager> sortedPlayerManagerMap = new HashMap<>();
 	private static Map<String, String> sqlColumns = new HashMap<>();
-	private static BukkitRunnable savePlayerDataRunnable;
 	private static BukkitRunnable balanceTopRunnable;
-	
 	private static Map<String, Integer> suffixes = new HashMap<>();
-	static {
-		suffixes.put("k", 3);
-		suffixes.put("K", 3);
-		suffixes.put("m", 6);
-		suffixes.put("M", 6);
-		suffixes.put("b", 9);
-		suffixes.put("B", 9);
-		suffixes.put("t", 12);
-		suffixes.put("T", 12);
-		suffixes.put("q", 15);
-		suffixes.put("Q", 15);
-	}
 	
 	@Override
 	public void onEnable() {
@@ -69,6 +53,7 @@ public class Economy extends JavaPlugin {
 		
 		instance = this;
 		economyUtils = new EconomyUtils();
+		suffixes = getSuffixesFromConfig();
 
 		if (!setupEconomy()) {
 			this.getLogger().warning("Economy couldn't be registed, Vault plugin is missing!");
@@ -129,38 +114,6 @@ public class Economy extends JavaPlugin {
 				return;
 			}
 			
-			int interval = getConfig().getInt("SaveDataTimerInterval");
-			savePlayerDataRunnable = new BukkitRunnable() {
-				Iterator<PlayerManager> iterator = new PlayerManagerIterator(new ArrayList<>(playerManagerMap.values()));
-				int accountsPerRun = getConfig().getInt("AccountsSavedPerRun");
-				@Override
-				public void run() {
-					for (int i = 0; i < accountsPerRun; i++) {
-						if (iterator.hasNext()) {
-							try {
-								if (sql.isConnected()) {
-									SQLUtils.savePlayerToDatabase(iterator.next());
-								}
-								else {
-									Economy.getInstance().getLogger().info("You were disconnected from the database, "
-											+ "attempting to reconnect now.");
-									connectToSQL();
-								}
-							} catch (SQLException | ConcurrentModificationException e) {
-								Economy.getInstance().getLogger().warning("There was an error with saving to the database, "
-										+ "this isn't a problem with the plugin.");
-							}
-						}
-						else {
-							iterator = new PlayerManagerIterator(
-									new ArrayList<>(playerManagerMap.values()));
-							return;
-						}
-					}
-				}
-			};
-			savePlayerDataRunnable.runTaskTimerAsynchronously(this, 0, interval);
-			
 		}
 		else {
 			
@@ -176,27 +129,6 @@ public class Economy extends JavaPlugin {
 			}
 			
 			playerManagerMap = FileUtils.getPlayerDataFromDatabase();
-			
-			int interval = getConfig().getInt("SaveDataTimerInterval");
-			savePlayerDataRunnable = new BukkitRunnable() {
-				Iterator<PlayerManager> iterator = new PlayerManagerIterator(new ArrayList<>(playerManagerMap.values()));
-				int islandsPerRun = getConfig().getInt("islandsSavedPerRun");
-				@Override
-				public void run() {
-					for (int i = 0; i < islandsPerRun; i++) {
-						if (iterator.hasNext()) {
-							PlayerManager playerManager = iterator.next();
-							FileUtils.saveToFile(FileUtils.getIslandFile(playerManager), playerManager);
-						}
-						else {
-							iterator = new PlayerManagerIterator(
-									new ArrayList<>(playerManagerMap.values()));
-							return;
-						}
-					}
-				}
-			};
-			savePlayerDataRunnable.runTaskTimerAsynchronously(this, 0, interval);
 			
 		}
 		
@@ -229,6 +161,14 @@ public class Economy extends JavaPlugin {
 			}
 		}
 		
+	}
+	
+	public static Map<String, Integer> getSuffixesFromConfig() {
+		Map<String, Integer> configSuffixes = new HashMap<>();
+		for (String suffix : Economy.getInstance().getConfig().getConfigurationSection("suffixes").getKeys(false)) {
+			configSuffixes.put(suffix, Economy.getInstance().getConfig().getInt("suffixes." + suffix));
+		}
+		return configSuffixes;
 	}
 	
 	public void connectToSQL() {
@@ -329,12 +269,12 @@ public class Economy extends JavaPlugin {
 		return Economy.getInstance().getDataFolder().getAbsolutePath();
 	}
 
-	public static BukkitRunnable getSavePlayerDataRunnable() {
-		return savePlayerDataRunnable;
-	}
-
 	public static Map<String, Integer> getSuffixes() {
 		return suffixes;
+	}
+	
+	public static void setSuffixes(Map<String, Integer> suffixes) {
+		Economy.suffixes = suffixes;
 	}
 	
 }
