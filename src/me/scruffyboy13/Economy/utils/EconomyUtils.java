@@ -269,7 +269,7 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account doesn't exist!");
 		}
 		PlayerManager playerManager = Economy.getPlayerManagerMap().get(uuid);
-		if (playerManager.getBalance() > amount) {
+		if (playerManager.getBalance() >= amount) {
 			playerManager.withdraw(amount);
 			save(playerManager);
 			return new EconomyResponse(amount, playerManager.getBalance(), ResponseType.SUCCESS, "");
