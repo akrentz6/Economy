@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,15 +48,23 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 				
 				Object[] playerManagers = Economy.getSortedPlayerManagerMap().keySet().toArray();
 				
-				for (int i = top*10; i < (top+1)*10; i++) {
+				int i = top*10;
+				int j = 0;
+				while (i < (top+1)*10) {
 					if (Economy.getSortedPlayerManagerMap().size() > i) {
 						UUID key = (UUID) playerManagers[i];
 						PlayerManager playerManager = Economy.getSortedPlayerManagerMap().get(key);
-						StringUtils.sendConfigMessage(sender, "messages.top.message", ImmutableMap.of(
-								"%rank%", i+1 + "",
-								"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
-								"%balance%", Economy.getEconomyUtils().format(playerManager.getTopBalance()) +  ""
-								));
+						OfflinePlayer player = Bukkit.getOfflinePlayer(playerManager.getUUID());
+						if (player.hasPlayedBefore()) {
+							StringUtils.sendConfigMessage(sender, "messages.top.message", ImmutableMap.of(
+									"%rank%", i+1-j + "",
+									"%player%", player.getName(),
+									"%balance%", Economy.getEconomyUtils().format(playerManager.getTopBalance()) +  ""
+									));
+						}
+						else {
+							j++;
+						}
 					}
 					else {
 						if (i == top*10) {
@@ -63,6 +72,7 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 							return true;
 						}
 					}
+					i++;
 				}
 				
 				if (sender instanceof Player) {
@@ -74,7 +84,7 @@ public class BalanceTopCommand implements org.bukkit.command.CommandExecutor {
 						if (playerIndex < top*10 || playerIndex > (top+1)*10) {
 							StringUtils.sendConfigMessage(sender, "messages.top.self", ImmutableMap.of(
 									"%rank%", playerIndex + "",
-									"%player%", Bukkit.getOfflinePlayer(playerManager.getUUID()).getName(),
+									"%player%", player.getName(),
 									"%balance%", Economy.getEconomyUtils().format(playerManager.getTopBalance()) +  ""
 									));
 						}

@@ -1,6 +1,6 @@
 name: Economy
 main: me.scruffyboy13.Economy.Economy
-version: 1.6.1
+version: 1.7
 author: scruffyboy13
 depend: [Vault]
 
