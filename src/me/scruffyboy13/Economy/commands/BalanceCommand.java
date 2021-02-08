@@ -45,13 +45,13 @@ public class BalanceCommand implements org.bukkit.command.CommandExecutor {
 				OfflinePlayer other = Bukkit.getOfflinePlayer(args[0]);
 				
 				if (!Economy.getEconomyUtils().hasAccount(other)) {
-					StringUtils.sendConfigMessage(sender, "messages.money.otherNoAccount", ImmutableMap.of(
+					StringUtils.sendConfigMessage(sender, "messages.balance.otherNoAccount", ImmutableMap.of(
 							"%player%", other.getName()));
 					return true;
 				}
 	
 				Double balance = Economy.getEconomyUtils().getBalance(other);
-				StringUtils.sendConfigMessage(sender, "messages.money.balance.otherBalance", ImmutableMap.of(
+				StringUtils.sendConfigMessage(sender, "messages.balance.otherBalance", ImmutableMap.of(
 						"%player%", other.getName(),
 						"%balance%", Economy.getEconomyUtils().format(balance) + ""));
 				

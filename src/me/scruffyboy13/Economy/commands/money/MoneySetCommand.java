@@ -53,7 +53,7 @@ public class MoneySetCommand extends CommandExecutor {
 					"%amount%", args[2]));
 			return;
 		}
-		if (amount <= 0) {
+		if (amount < 0) {
 			StringUtils.sendConfigMessage(sender, "messages.money.set.invalidAmount", ImmutableMap.of(
 					"%amount%", args[2]));
 			return;
