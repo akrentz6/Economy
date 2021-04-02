@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -132,25 +131,9 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 
 	@Override
 	public String format(double amount) {
-		Map.Entry<String, Integer> biggest = null;
-		for (Map.Entry<String, Integer> suffix : Economy.getSuffixes().entrySet()) {
-			if (amount >= Math.pow(10, suffix.getValue())) {
-				if (biggest == null || suffix.getValue() > biggest.getValue()) {
-					biggest = suffix;
-				}
-			}
-		}
-		if (biggest == null) {
-			return NumberFormat.getCurrencyInstance(Locale.forLanguageTag(
-					Economy.getInstance().getConfig().getString("locale")))
-					.format(amount).replace("&nbsp", " ");
-		}
-		else {
-			return (NumberFormat.getCurrencyInstance(Locale.forLanguageTag(
-	                Economy.getInstance().getConfig().getString("locale")))
-	                .format(Math.round(amount / Math.pow(10, biggest.getValue())
-	                        * 100) / 100.0) + biggest.getKey()).replace("&nbsp", " ");
-		}
+		return (NumberFormat.getCurrencyInstance(Locale.forLanguageTag(
+				Economy.getInstance().getConfig().getString("locale")))
+				.format(amount)).replace("&nbsp", " ");
 	}
 
 	@Override
