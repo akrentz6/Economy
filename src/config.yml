@@ -8,6 +8,11 @@ startingBalance: 100.00
 # Changing the locale will change wht format the money is in, see 
 # https://www.techonthenet.com/js/language_tags.php for examples.
 locale: "en-US"
+# Note: The custom symbol may not work if minecraft doesn't allow that symbol.
+#       The custom symbol may need to be in unicode format (e.g. \u26C3 for 
+#       dollar sign) to be able to work.
+customSymbolEnabled: false
+customSymbol: ""
 
 mysql:
   use-mysql: false

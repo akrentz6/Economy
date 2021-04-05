@@ -3,6 +3,7 @@ package me.scruffyboy13.Economy.utils;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -131,9 +132,14 @@ public class EconomyUtils implements net.milkbowl.vault.economy.Economy {
 
 	@Override
 	public String format(double amount) {
-		return (NumberFormat.getCurrencyInstance(Locale.forLanguageTag(
-				Economy.getInstance().getConfig().getString("locale")))
-				.format(amount)).replace("&nbsp", " ");
+		Locale locale = Locale.forLanguageTag(Economy.getInstance().getConfig().getString("locale"));
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+		String formatted = numberFormat.format(amount).replace("&nbsp", " ");
+		if (Economy.getInstance().getConfig().getBoolean("customSymbolEnabled")) {
+			formatted = formatted.replace(Currency.getInstance(locale).getSymbol(locale), 
+					Economy.getInstance().getConfig().getString("customSymbol"));
+		}
+		return formatted;
 	}
 
 	@Override
