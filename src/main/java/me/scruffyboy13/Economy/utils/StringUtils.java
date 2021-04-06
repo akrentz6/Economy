@@ -2,8 +2,10 @@ package me.scruffyboy13.Economy.utils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,12 +15,25 @@ import me.scruffyboy13.Economy.Economy;
 
 public class StringUtils {
 
+	private static final Pattern rgbColor = Pattern.compile("(?<!\\\\)(&#[a-fA-F0-9]{6})");
+
 	private static String getPrefix() {
 		return color(Economy.getInstance().getConfig().getString("messages.prefix"));
 	}
 
 	public static String color(String msg) {
-		return ChatColor.translateAlternateColorCodes('&', msg);
+		return ChatColor.translateAlternateColorCodes('&', parseRGB(msg));
+	}
+
+	public static String parseRGB(String msg) {
+		Matcher matcher = rgbColor.matcher(msg);
+		while (matcher.find()) {
+			String color = msg.substring(matcher.start(), matcher.end());
+			String hex = color.replace("&", "");
+			msg = msg.replace(color, "" + ChatColor.of(hex));
+			matcher = rgbColor.matcher(msg);
+		}
+		return msg;
 	}
 	
 	public static void sendMessage(CommandSender sender, List<String> message) {
