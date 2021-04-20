@@ -23,7 +23,7 @@ public class MySQL {
     
     public void connect() throws ClassNotFoundException, SQLException {
         if (!isConnected()) {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true&useSSL=false", username, password);
         }
     }
