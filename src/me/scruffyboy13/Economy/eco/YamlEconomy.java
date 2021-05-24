@@ -64,6 +64,8 @@ public class YamlEconomy implements Economy {
 
 	@Override
 	public boolean set(UUID uuid, double amount) {
+		if (amount < 0)
+			return false;
 		YamlData data = new YamlData(uuid.toString() + ".yml", EconomyMain.getPath() + "/data");
 		data.getConfig().set("UUID", uuid.toString());
 		data.getConfig().set("Balance", amount);

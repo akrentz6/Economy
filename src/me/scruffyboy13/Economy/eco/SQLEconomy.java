@@ -133,6 +133,8 @@ public class SQLEconomy implements Economy {
 
 	@Override
 	public boolean set(UUID uuid, double amount) {
+		if (amount < 0)
+			return false;
 		try {
 			PreparedStatement statement = sql.getConnection().prepareStatement("UPDATE Economy SET "
 					+ "UUID=?, Balance=? WHERE UUID=?");

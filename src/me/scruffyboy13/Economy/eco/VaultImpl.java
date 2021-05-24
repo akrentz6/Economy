@@ -91,7 +91,7 @@ public class VaultImpl implements net.milkbowl.vault.economy.Economy {
 	}
 	
 	private EconomyResponse deposit(UUID uuid, double amount) {
-		if (EconomyMain.getEco().deposit(uuid, amount)) {
+		if (!EconomyMain.getEco().deposit(uuid, amount)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Failed to deposit funds.");
 		}
 		return new EconomyResponse(amount, getBalance(uuid), ResponseType.SUCCESS, "");
@@ -203,7 +203,7 @@ public class VaultImpl implements net.milkbowl.vault.economy.Economy {
 	}
 	
 	private EconomyResponse withdraw(UUID uuid, double amount) {
-		if (EconomyMain.getEco().withdraw(uuid, amount)) {
+		if (!EconomyMain.getEco().withdraw(uuid, amount)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Failed to withdraw funds.");
 		}
 		return new EconomyResponse(amount, getBalance(uuid), ResponseType.SUCCESS, "");
