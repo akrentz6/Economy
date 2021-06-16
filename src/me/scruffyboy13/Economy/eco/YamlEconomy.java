@@ -80,9 +80,13 @@ public class YamlEconomy implements Economy {
 
 	@Override
 	public PlayerBalance getBalance(UUID uuid) {
-		YamlData data = new YamlData(uuid.toString() + ".yml", EconomyMain.getPath() + "/data");
-		double balance = data.getConfig().getDouble("Balance");
-		return new PlayerBalance(uuid, balance);
+		try {
+			YamlData data = new YamlData(uuid.toString() + ".yml", EconomyMain.getPath() + "/data");
+			double balance = data.getConfig().getDouble("Balance");
+			return new PlayerBalance(uuid, balance);
+		} catch (Exception e) {
+			return new PlayerBalance(uuid, 0);
+		}
 	}
 
 	@Override

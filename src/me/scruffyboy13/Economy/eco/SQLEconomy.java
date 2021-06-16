@@ -166,11 +166,10 @@ public class SQLEconomy implements Economy {
 		double balance = result.getDouble("Balance");
 		return new PlayerBalance(uuid, balance);
 		} catch (SQLException e) {
-			EconomyMain.warn(e.getMessage());
-			return null;
+			return new PlayerBalance(uuid, 0);
 		}
 	}
-
+	
 	@Override
 	public List<PlayerBalance> getPlayers() {
 		try {

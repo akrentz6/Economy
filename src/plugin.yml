@@ -1,6 +1,6 @@
 name: Economy
 main: me.scruffyboy13.Economy.EconomyMain
-version: 2.1
+version: 2.2
 author: scruffyboy13
 depend: [Vault]
 load: STARTUP
