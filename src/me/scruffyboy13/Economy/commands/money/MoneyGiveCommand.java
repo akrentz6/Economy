@@ -3,7 +3,6 @@ package me.scruffyboy13.Economy.commands.money;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,21 +25,14 @@ public class MoneyGiveCommand extends CommandExecutor {
 		this.setLengths(Arrays.asList(3));
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		
-		OfflinePlayer other = Bukkit.getOfflinePlayer(args[1]);
+		List<OfflinePlayer> others = EconomyMain.getPlayersFromString(sender, args[1]);
 		
-		if (other == null) {
+		if (others.isEmpty() && !args[1].equals("@a")) {
 			StringUtils.sendConfigMessage(sender, "messages.money.give.otherDoesntExist", ImmutableMap.of(
 					"%player%", args[1]));
-			return;
-		}
-		
-		if (!EconomyMain.getEco().hasAccount(other.getUniqueId())) {
-			StringUtils.sendConfigMessage(sender, "messages.money.give.otherNoAccount", ImmutableMap.of(
-					"%player%", other.getName()));
 			return;
 		}
 		
@@ -59,18 +51,52 @@ public class MoneyGiveCommand extends CommandExecutor {
 			return;
 		}
 		
-		EconomyMain.getEco().deposit(other.getUniqueId(), amount);
-		StringUtils.sendConfigMessage(sender, "messages.money.give.sent", ImmutableMap.of(
-				"%amount%", EconomyMain.format(amount),
-				"%player%", other.getName()));
-		if (other instanceof Player) {
-			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
-				StringUtils.sendConfigMessage((Player) other, "messages.money.give.received", ImmutableMap.of(
-						"%amount%", EconomyMain.format(amount)));
+		int total = 0;
+		boolean failed = false;
+		
+		for (OfflinePlayer other : others) {
+		
+			if (!EconomyMain.getEco().hasAccount(other.getUniqueId())) {
+				StringUtils.sendConfigMessage(sender, "messages.money.give.otherNoAccount", ImmutableMap.of(
+						"%player%", other.getName()));
+				failed = true;
+				continue;
 			}
+			
+			EconomyMain.getEco().deposit(other.getUniqueId(), amount);
+		
+			if (other instanceof Player) {
+				if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
+					StringUtils.sendConfigMessage((Player) other, "messages.money.give.received", ImmutableMap.of(
+							"%amount%", EconomyMain.format(amount)));
+				}
+			}
+			
+			total += 1;
+			
 		}
 		
-		return;
+		if (others.size() == 1) {
+			
+			if (!failed) {
+			
+				OfflinePlayer other = others.get(0);
+				StringUtils.sendConfigMessage(sender, "messages.money.give.sent", ImmutableMap.of(
+						"%amount%", EconomyMain.format(amount),
+						"%player%", other.getName()));
+			
+			}
+			
+		}
+		
+		else {
+		
+			StringUtils.sendConfigMessage(sender, "messages.money.give.sentMultiple", ImmutableMap.of(
+					"%total%", total + "",
+					"%amount%", EconomyMain.format(amount)
+					));
+			
+		}
 		
 	}
 

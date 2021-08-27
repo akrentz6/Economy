@@ -1,12 +1,16 @@
 package me.scruffyboy13.Economy;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -122,6 +126,37 @@ public class EconomyMain extends JavaPlugin {
 		}
 		double pow = Math.pow(10, mult);
 		return Math.round(Double.valueOf(string) * (100.0 * pow)) / (100.0 * pow) * pow;
+	}
+	
+
+	@SuppressWarnings("deprecation")
+	public static ArrayList<OfflinePlayer> getPlayersFromString(CommandSender sender, String name) {
+
+		OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+		
+		ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+		
+		if (player == null && !name.equals("@a")) {
+			
+			return players;
+			
+		}
+		
+		if (name.equals("@a")) {
+			
+			players.addAll(new ArrayList<OfflinePlayer>(Bukkit.getOnlinePlayers()));
+
+			if (sender instanceof OfflinePlayer) {
+				
+				players.remove((OfflinePlayer) sender);
+				
+			}
+			
+			return players;
+		}
+		
+		return new ArrayList<OfflinePlayer>(Arrays.asList(player));
+		
 	}
 	
 	public static String format(double amount) {

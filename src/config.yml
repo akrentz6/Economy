@@ -50,11 +50,11 @@ messages:
     noAccount:
       - "%prefix% &cYou don't have an account!"
     balance:
-      - "%prefix% &aYour balance is &e%balance%."
+      - "%prefix% &aYour balance is &e%balance%&a."
     otherNoAccount:
       - "%prefix% &5%player% &cdoesn't have an account!"
     otherBalance:
-      - "%prefix% &5%player%&a's balance is &e%balance%."
+      - "%prefix% &5%player%&a's balance is &e%balance%&a."
   
   money:
   
@@ -71,9 +71,11 @@ messages:
       invalidAmount:
         - "%prefix% &5%amount% &cis invalid!"
       sent:
-        - "%prefix% &aYou sent &e%amount% &ato &5%player%."
+        - "%prefix% &aYou sent &e%amount% &ato &5%player%&a."
+      sentMultiple:
+        - "%prefix% &aYou sent &b%total% &aplayers &e%amount%&a."
       received:
-        - "%prefix% &aYou were given &e%amount%."
+        - "%prefix% &aYou were given &e%amount%&a."
         
     help:
       usage:
@@ -102,9 +104,11 @@ messages:
       invalidAmount:
         - "%prefix% &5%amount% &cis invalid!"
       setter:
-        - "%prefix% &5%player%&a's balance was set to &e%balance%."
+        - "%prefix% &5%player%&a's balance was set to &e%balance%&a."
+      setterMultiple:
+        - "%prefix% &b%total% players' balances were set to &e%balance%&a."
       set:
-        - "%prefix% &e%amount% &awas taken from your account."
+        - "%prefix% &aYour balance was set to &e%amount%&a."
     
     take:
       usage:
@@ -119,6 +123,8 @@ messages:
         - "%prefix% &5%player% &chas insufficient funds!"
       take:
         - "%prefix% &e%amount% &awas taken from &5%player%&a's account."
+      takeMultiple:
+        - "%prefix% &e%amount% &awas taken from &b%total% &aplayers' accounts."
       taken:
         - "%prefix% &e%amount% &awas taken from your account."
   
@@ -138,9 +144,9 @@ messages:
     insufficientFunds:
       - "%prefix% &cYou have insufficient funds!"
     paid:
-      - "%prefix% &aYou paid &5%player% &e%amount%."
+      - "%prefix% &aYou paid &5%player% &e%amount%&a."
     received:
-      - "%prefix% &aYou were paid &e%amount% by &5%player%."
+      - "%prefix% &aYou were paid &e%amount% by &5%player%&a."
     
   top:
     usage:

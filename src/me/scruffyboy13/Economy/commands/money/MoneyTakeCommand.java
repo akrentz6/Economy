@@ -3,7 +3,6 @@ package me.scruffyboy13.Economy.commands.money;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,21 +26,14 @@ public class MoneyTakeCommand extends CommandExecutor {
 		this.setAliases(Arrays.asList("remove"));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 
-		OfflinePlayer other = Bukkit.getOfflinePlayer(args[1]);
+		List<OfflinePlayer> others = EconomyMain.getPlayersFromString(sender, args[1]);
 		
-		if (other == null) {
+		if (others.isEmpty() && !args[1].equals("@a")) {
 			StringUtils.sendConfigMessage(sender, "messages.money.take.otherDoesntExist", ImmutableMap.of(
 					"%player%", args[1]));
-			return;
-		}
-		
-		if (!EconomyMain.getEco().hasAccount(other.getUniqueId())) {
-			StringUtils.sendConfigMessage(sender, "messages.money.take.otherNoAccount", ImmutableMap.of(
-					"%player%", other.getName()));
 			return;
 		}
 		
@@ -60,21 +52,56 @@ public class MoneyTakeCommand extends CommandExecutor {
 			return;
 		}
 		
-		if (!EconomyMain.getEco().has(other.getUniqueId(), amount)) {
-			StringUtils.sendConfigMessage(sender, "messages.money.take.insufficientFunds", ImmutableMap.of(
-					"%player%", other.getName()));
-			return;
+		int total = 0;
+		boolean failed = false;
+		
+		for (OfflinePlayer other : others) {
+		
+			if (!EconomyMain.getEco().hasAccount(other.getUniqueId())) {
+				StringUtils.sendConfigMessage(sender, "messages.money.take.otherNoAccount", ImmutableMap.of(
+						"%player%", other.getName()));
+				failed = true;
+				continue;
+			}
+			
+			if (!EconomyMain.getEco().has(other.getUniqueId(), amount)) {
+				StringUtils.sendConfigMessage(sender, "messages.money.take.insufficientFunds", ImmutableMap.of(
+						"%player%", other.getName()));
+				failed = true;
+				continue;
+			}
+			
+			EconomyMain.getEco().withdraw(other.getUniqueId(), amount);
+			
+			if (other instanceof Player) {
+				if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
+					StringUtils.sendConfigMessage((Player) other, "messages.money.take.taken", ImmutableMap.of(
+							"%amount%", EconomyMain.format(amount)));
+				}
+			}
+			
+			total += 1;
+		
 		}
 		
-		EconomyMain.getEco().withdraw(other.getUniqueId(), amount);
-		StringUtils.sendConfigMessage(sender, "messages.money.take.take", ImmutableMap.of(
-				"%amount%", EconomyMain.format(amount),
-				"%player%", other.getName()));
-		if (other instanceof Player) {
-			if (!(sender instanceof Player && ((Player) sender).equals((Player) other))) {
-				StringUtils.sendConfigMessage((Player) other, "messages.money.take.taken", ImmutableMap.of(
-						"%amount%", EconomyMain.format(amount)));
+		if (others.size() == 1) {
+			
+			if (!failed) {
+			
+				StringUtils.sendConfigMessage(sender, "messages.money.take.take", ImmutableMap.of(
+						"%amount%", EconomyMain.format(amount),
+						"%player%", others.get(0).getName()));
+				
 			}
+			
+		}
+		
+		else {
+			
+			StringUtils.sendConfigMessage(sender, "messages.money.take.takeMultiple", ImmutableMap.of(
+					"%total%", total + "",
+					"%amount%", EconomyMain.format(amount)));
+			
 		}
 		
 		return;
