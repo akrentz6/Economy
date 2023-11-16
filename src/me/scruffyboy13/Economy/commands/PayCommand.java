@@ -63,7 +63,7 @@ public class PayCommand implements org.bukkit.command.CommandExecutor {
 			}
 			if (amount <= 0) {
 				StringUtils.sendConfigMessage(sender, "messages.money.give.invalidAmount", ImmutableMap.of(
-						"%amount%", args[2]));
+						"%amount%", args[1]));
 				return true;
 			}
 			
